@@ -1,0 +1,92 @@
+[
+  {
+    "model": "products.product",
+    "pk": 1,
+    "fields": {
+      "name": "Wireless Mouse",
+      "sku": "TECH-001",
+      "length_cm": "12.00",
+      "width_cm": "7.00",
+      "height_cm": "4.00",
+      "weight_kg": "0.150",
+      "description": "Compact wireless mouse",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 2,
+    "fields": {
+      "name": "Mechanical Keyboard",
+      "sku": "TECH-002",
+      "length_cm": "44.00",
+      "width_cm": "14.00",
+      "height_cm": "4.00",
+      "weight_kg": "1.100",
+      "description": "Full-size mechanical keyboard",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 3,
+    "fields": {
+      "name": "USB-C Hub",
+      "sku": "TECH-003",
+      "length_cm": "10.00",
+      "width_cm": "5.00",
+      "height_cm": "2.00",
+      "weight_kg": "0.080",
+      "description": "7-in-1 USB-C hub",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 4,
+    "fields": {
+      "name": "Monitor Stand",
+      "sku": "FURN-001",
+      "length_cm": "30.00",
+      "width_cm": "25.00",
+      "height_cm": "10.00",
+      "weight_kg": "1.800",
+      "description": "Adjustable monitor riser",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 5,
+    "fields": {
+      "name": "Laptop Sleeve 15\"",
+      "sku": "ACC-001",
+      "length_cm": "38.00",
+      "width_cm": "27.00",
+      "height_cm": "2.00",
+      "weight_kg": "0.250",
+      "description": "Neoprene laptop sleeve",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 6,
+    "fields": {
+      "name": "Webcam HD",
+      "sku": "TECH-004",
+      "length_cm": "9.00",
+      "width_cm": "7.00",
+      "height_cm": "7.00",
+      "weight_kg": "0.170",
+      "description": "1080p HD webcam",
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
+  }
+]

@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Box{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900">{{ title }}</h1>
+        <p class="text-sm text-gray-500 mt-0.5">Fill in the box details below</p>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-lg p-6">
+        <form method="post" novalidate>
+            {% csrf_token %}
+            
+            {% if form.errors %}
+            <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div class="text-sm text-red-600 font-medium mb-1">Please correct the following errors:</div>
+                <ul class="text-sm text-red-600 list-disc list-inside">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ field.label }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <!-- Name -->
+            <div class="mb-4">
+                <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                    Box Name <span class="text-red-500">*</span>
+                </label>
+                <input type="text" name="{{ form.name.name }}" id="{{ form.name.id_for_label }}"
+                       value="{{ form.name.value|default:'' }}"
+                       class="w-full px-3 py-2 border {% if form.name.errors %}border-red-500{% else %}border-gray-300{% endif %} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                       placeholder="e.g. Small Box, Large Box">
+                {% if form.name.errors %}
+                    <p class="text-xs text-red-500 mt-1">{{ form.name.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Internal Dimensions -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Internal Dimensions (cm) <span class="text-red-500">*</span></label>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label for="{{ form.internal_length_cm.id_for_label }}" class="block text-xs text-gray-500 mb-1">Length</label>
+                        <input type="number" step="0.01" name="{{ form.internal_length_cm.name }}" id="{{ form.internal_length_cm.id_for_label }}"
+                               value="{{ form.internal_length_cm.value|default:'' }}"
+                               class="w-full px-3 py-2 border {% if form.internal_length_cm.errors %}border-red-500{% else %}border-gray-300{% endif %} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="0.00">
+                        {% if form.internal_length_cm.errors %}
+                            <p class="text-xs text-red-500 mt-1">{{ form.internal_length_cm.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label for="{{ form.internal_width_cm.id_for_label }}" class="block text-xs text-gray-500 mb-1">Width</label>
+                        <input type="number" step="0.01" name="{{ form.internal_width_cm.name }}" id="{{ form.internal_width_cm.id_for_label }}"
+                               value="{{ form.internal_width_cm.value|default:'' }}"
+                               class="w-full px-3 py-2 border {% if form.internal_width_cm.errors %}border-red-500{% else %}border-gray-300{% endif %} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="0.00">
+                        {% if form.internal_width_cm.errors %}
+                            <p class="text-xs text-red-500 mt-1">{{ form.internal_width_cm.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label for="{{ form.internal_height_cm.id_for_label }}" class="block text-xs text-gray-500 mb-1">Height</label>
+                        <input type="number" step="0.01" name="{{ form.internal_height_cm.name }}" id="{{ form.internal_height_cm.id_for_label }}"
+                               value="{{ form.internal_height_cm.value|default:'' }}"
+                               class="w-full px-3 py-2 border {% if form.internal_height_cm.errors %}border-red-500{% else %}border-gray-300{% endif %} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="0.00">
+                        {% if form.internal_height_cm.errors %}
+                            <p class="text-xs text-red-500 mt-1">{{ form.internal_height_cm.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Max Weight -->
+            <div class="mb-4">
+                <label for="{{ form.max_weight_kg.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                    Maximum Weight Capacity (kg) <span class="text-red-500">*</span>
+                </label>
+                <div class="max-w-xs">
+                    <input type="number" step="0.001" name="{{ form.max_weight_kg.name }}" id="{{ form.max_weight_kg.id_for_label }}"
+                           value="{{ form.max_weight_kg.value|default:'' }}"
+                           class="w-full px-3 py-2 border {% if form.max_weight_kg.errors %}border-red-500{% else %}border-gray-300{% endif %} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="0.000">
+                    {% if form.max_weight_kg.errors %}
+                        <p class="text-xs text-red-500 mt-1">{{ form.max_weight_kg.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Cost -->
+            <div class="mb-4">
+                <label for="{{ form.cost_rupees.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                    Cost (INR) <span class="text-red-500">*</span>
+                </label>
+                <div class="max-w-xs">
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">₹</span>
+                        <input type="number" step="1" name="{{ form.cost_rupees.name }}" id="{{ form.cost_rupees.id_for_label }}"
+                               value="{{ form.cost_rupees.value|default:'' }}"
+                               class="w-full pl-8 pr-3 py-2 border {% if form.cost_rupees.errors %}border-red-500{% else %}border-gray-300{% endif %} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="150">
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">{{ form.cost_rupees.help_text }}</p>
+                    {% if form.cost_rupees.errors %}
+                        <p class="text-xs text-red-500 mt-1">{{ form.cost_rupees.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Active Status -->
+            <div class="mb-6">
+                <div class="flex items-center">
+                    <input type="checkbox" name="{{ form.is_active.name }}" id="{{ form.is_active.id_for_label }}"
+                           {% if form.is_active.value %}checked{% endif %}
+                           class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <label for="{{ form.is_active.id_for_label }}" class="ml-2 block text-sm text-gray-700">
+                        Active (box is available for use)
+                    </label>
+                </div>
+                {% if form.is_active.errors %}
+                    <p class="text-xs text-red-500 mt-1">{{ form.is_active.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+                <a href="{% url 'box-list' %}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+                    Cancel
+                </a>
+                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
+                    {{ action|default:"Save" }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

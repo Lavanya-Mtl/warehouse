@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Product{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto">
+    <div class="bg-white border border-gray-200 rounded-lg p-6">
+        <div class="text-center">
+            <!-- Warning Icon -->
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            
+            <h2 class="text-xl font-bold text-gray-900 mb-2">Delete Product</h2>
+            
+            <p class="text-gray-600 mb-4">
+                Are you sure you want to delete the product
+                <span class="font-semibold text-gray-900">"{{ object.name }}"</span>?
+            </p>
+            
+            <div class="bg-gray-50 rounded-lg p-4 mb-6 text-left text-sm">
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <span class="text-gray-500">SKU:</span>
+                        <span class="font-mono text-gray-900">{{ object.sku }}</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-500">Dimensions:</span>
+                        <span class="text-gray-900">{{ object.length_cm }} × {{ object.width_cm }} × {{ object.height_cm }} cm</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-500">Weight:</span>
+                        <span class="text-gray-900">{{ object.weight_kg }} kg</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-500">Volume:</span>
+                        <span class="text-gray-900">{{ object.volume_cm3|floatformat:0 }} cm³</span>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="text-sm text-red-600 mb-6">
+                ⚠️ This action cannot be undone. The product will be permanently removed from the system.
+            </p>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="flex items-center justify-center gap-3">
+                    <a href="{% url 'product-list' %}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+                        Cancel
+                    </a>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors">
+                        Yes, Delete Product
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Product{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900">{{ title }}</h1>
+        <p class="text-sm text-gray-500 mt-0.5">Fill in the product details below</p>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-lg p-6">
+        <form method="post" novalidate>
+            {% csrf_token %}
+            
+            {% if form.errors %}
+            <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div class="text-sm text-red-600 font-medium mb-1">Please correct the following errors:</div>
+                <ul class="text-sm text-red-600 list-disc list-inside">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ field.label }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <!-- Name and SKU -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                        Product Name <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="{{ form.name.name }}" id="{{ form.name.id_for_label }}"
+                           value="{{ form.name.value|default:'' }}"
+                           class="w-full px-3 py-2 border {% if form.name.errors %}border-red-500{% else %}border-gray-300{% endif %} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="Enter product name">
+                    {% if form.name.errors %}
+                        <p class="text-xs text-red-500 mt-1">{{ form.name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <div>
+                    <label for="{{ form.sku.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                        SKU <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="{{ form.sku.name }}" id="{{ form.sku.id_for_label }}"
+                           value="{{ form.sku.value|default:'' }}"
+                           class="w-full px-3 py-2 border {% if form.sku.errors %}border-red-500{% else %}border-gray-300{% endif %} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="Enter unique SKU">
+                    {% if form.sku.errors %}
+                        <p class="text-xs text-red-500 mt-1">{{ form.sku.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Dimensions -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Dimensions (cm) <span class="text-red-500">*</span></label>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label for="{{ form.length_cm.id_for_label }}" class="block text-xs text-gray-500 mb-1">Length</label>
+                        <input type="number" step="0.01" name="{{ form.length_cm.name }}" id="{{ form.length_cm.id_for_label }}"
+                               value="{{ form.length_cm.value|default:'' }}"
+                               class="w-full px-3 py-2 border {% if form.length_cm.errors %}border-red-500{% else %}border-gray-300{% endif %} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="0.00">
+                        {% if form.length_cm.errors %}
+                            <p class="text-xs text-red-500 mt-1">{{ form.length_cm.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label for="{{ form.width_cm.id_for_label }}" class="block text-xs text-gray-500 mb-1">Width</label>
+                        <input type="number" step="0.01" name="{{ form.width_cm.name }}" id="{{ form.width_cm.id_for_label }}"
+                               value="{{ form.width_cm.value|default:'' }}"
+                               class="w-full px-3 py-2 border {% if form.width_cm.errors %}border-red-500{% else %}border-gray-300{% endif %} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="0.00">
+                        {% if form.width_cm.errors %}
+                            <p class="text-xs text-red-500 mt-1">{{ form.width_cm.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label for="{{ form.height_cm.id_for_label }}" class="block text-xs text-gray-500 mb-1">Height</label>
+                        <input type="number" step="0.01" name="{{ form.height_cm.name }}" id="{{ form.height_cm.id_for_label }}"
+                               value="{{ form.height_cm.value|default:'' }}"
+                               class="w-full px-3 py-2 border {% if form.height_cm.errors %}border-red-500{% else %}border-gray-300{% endif %} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="0.00">
+                        {% if form.height_cm.errors %}
+                            <p class="text-xs text-red-500 mt-1">{{ form.height_cm.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weight -->
+            <div class="mb-4">
+                <label for="{{ form.weight_kg.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                    Weight (kg) <span class="text-red-500">*</span>
+                </label>
+                <div class="max-w-xs">
+                    <input type="number" step="0.001" name="{{ form.weight_kg.name }}" id="{{ form.weight_kg.id_for_label }}"
+                           value="{{ form.weight_kg.value|default:'' }}"
+                           class="w-full px-3 py-2 border {% if form.weight_kg.errors %}border-red-500{% else %}border-gray-300{% endif %} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="0.000">
+                    {% if form.weight_kg.errors %}
+                        <p class="text-xs text-red-500 mt-1">{{ form.weight_kg.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-6">
+                <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                    Description
+                </label>
+                <textarea name="{{ form.description.name }}" id="{{ form.description.id_for_label }}"
+                          rows="3"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="Enter product description (optional)">{{ form.description.value|default:'' }}</textarea>
+                {% if form.description.errors %}
+                    <p class="text-xs text-red-500 mt-1">{{ form.description.errors.0 }}</p>
+                {% endif %}
+                <p class="text-xs text-gray-400 mt-1">Optional description or notes about the product</p>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+                <a href="{% url 'product-list' %}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+                    Cancel
+                </a>
+                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
+                    {{ action|default:"Save" }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

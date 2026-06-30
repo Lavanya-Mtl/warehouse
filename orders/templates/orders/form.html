@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900">{{ title }}</h1>
+        <p class="text-sm text-gray-500 mt-0.5">Fill in the order details and add products</p>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-lg p-6">
+        <form method="post" novalidate id="order-form">
+            {% csrf_token %}
+            
+            <!-- Non-field errors -->
+            {% if form.non_field_errors or item_formset.non_form_errors %}
+            <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div class="text-sm text-red-600 font-medium mb-1">Please correct the following errors:</div>
+                <ul class="text-sm text-red-600 list-disc list-inside">
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    {% for error in item_formset.non_form_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <!-- Order Details -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                    <label for="{{ form.order_number.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                        Order Number <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="{{ form.order_number.name }}" id="{{ form.order_number.id_for_label }}"
+                           value="{{ form.order_number.value|default:'' }}"
+                           class="w-full px-3 py-2 border {% if form.order_number.errors %}border-red-500{% else %}border-gray-300{% endif %} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="e.g. ORD-2024-001">
+                    {% if form.order_number.errors %}
+                        <p class="text-xs text-red-500 mt-1">{{ form.order_number.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <div>
+                    <label for="{{ form.customer_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                        Customer Name <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="{{ form.customer_name.name }}" id="{{ form.customer_name.id_for_label }}"
+                           value="{{ form.customer_name.value|default:'' }}"
+                           class="w-full px-3 py-2 border {% if form.customer_name.errors %}border-red-500{% else %}border-gray-300{% endif %} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="Enter customer name">
+                    {% if form.customer_name.errors %}
+                        <p class="text-xs text-red-500 mt-1">{{ form.customer_name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                    <label for="{{ form.customer_email.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                        Customer Email
+                    </label>
+                    <input type="email" name="{{ form.customer_email.name }}" id="{{ form.customer_email.id_for_label }}"
+                           value="{{ form.customer_email.value|default:'' }}"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="customer@example.com">
+                    {% if form.customer_email.errors %}
+                        <p class="text-xs text-red-500 mt-1">{{ form.customer_email.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <label for="{{ form.notes.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                    Notes
+                </label>
+                <textarea name="{{ form.notes.name }}" id="{{ form.notes.id_for_label }}"
+                          rows="2"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="Optional notes about this order">{{ form.notes.value|default:'' }}</textarea>
+                {% if form.notes.errors %}
+                    <p class="text-xs text-red-500 mt-1">{{ form.notes.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Order Items -->
+            <div class="mb-6">
+                <div class="flex items-center justify-between mb-3">
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900">Order Items</h3>
+                        <p class="text-sm text-gray-500">Add products to this order</p>
+                    </div>
+                    <button type="button" id="add-item-btn" 
+                            class="inline-flex items-center gap-1.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium px-3 py-1.5 rounded-lg transition-colors">
+                        + Add Item
+                    </button>
+                </div>
+                
+                {{ item_formset.management_form }}
+                
+                <div id="item-forms-container" class="space-y-3">
+                    {% for item_form in item_formset %}
+                        <div class="item-form border border-gray-200 rounded-lg p-4 {% if item_form.instance.pk %}bg-gray-50{% endif %}">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+                                {{ item_form.id }}
+                                <div>
+                                    <label for="{{ item_form.product.id_for_label }}" class="block text-xs font-medium text-gray-700 mb-1">
+                                        Product <span class="text-red-500">*</span>
+                                    </label>
+                                    <select name="{{ item_form.product.html_name }}" id="{{ item_form.product.id_for_label }}"
+                                            class="product-select w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <option value="">Select a product...</option>
+                                        {% for product in item_form.fields.product.queryset %}
+                                            <option value="{{ product.pk }}" {% if item_form.product.value == product.pk %}selected{% endif %}>
+                                                {{ product.name }} ({{ product.sku }})
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                    {% if item_form.product.errors %}
+                                        <p class="text-xs text-red-500 mt-1">{{ item_form.product.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <label for="{{ item_form.quantity.id_for_label }}" class="block text-xs font-medium text-gray-700 mb-1">
+                                        Quantity <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="number" name="{{ item_form.quantity.html_name }}" id="{{ item_form.quantity.id_for_label }}"
+                                           value="{{ item_form.quantity.value|default:1 }}"
+                                           min="1"
+                                           class="quantity-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    {% if item_form.quantity.errors %}
+                                        <p class="text-xs text-red-500 mt-1">{{ item_form.quantity.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    {% if item_form.instance.pk %}
+                                        <div class="flex-1">
+                                            <label class="block text-xs font-medium text-gray-700 mb-1">Delete?</label>
+                                            <div class="flex items-center">
+                                                <input type="checkbox" name="{{ item_form.DELETE.name }}" id="{{ item_form.DELETE.id_for_label }}"
+                                                       class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
+                                                <label for="{{ item_form.DELETE.id_for_label }}" class="ml-2 text-xs text-gray-600">Remove</label>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <button type="button" class="remove-item-btn text-red-600 hover:text-red-800 text-sm font-medium">
+                                            Remove
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                {% if item_formset.errors %}
+                    <div class="mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+                        <p class="text-sm text-red-600 font-medium">Please correct the errors in the order items above.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+                <a href="{% url 'order-list' %}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+                    Cancel
+                </a>
+                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
+                    {% if object %}Save Changes{% else %}Create Order{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('item-forms-container');
+        const addBtn = document.getElementById('add-item-btn');
+        const totalFormsInput = document.getElementById('id_items-TOTAL_FORMS');
+        
+        // Get the list of products from the first select (for cloning options)
+        function getProductOptions() {
+            const firstSelect = document.querySelector('.product-select');
+            if (!firstSelect) return '';
+            return firstSelect.innerHTML;
+        }
+        
+        // Create a new empty item form
+        function createEmptyForm() {
+            const formCount = parseInt(totalFormsInput.value);
+            const prefix = formCount;
+            
+            // Get product options from the first form
+            const productOptions = getProductOptions();
+            
+            // Create the form HTML
+            const formHtml = `
+                <div class="item-form border border-gray-200 rounded-lg p-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">
+                                Product <span class="text-red-500">*</span>
+                            </label>
+                            <select name="items-${prefix}-product" class="product-select w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                ${productOptions}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">
+                                Quantity <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" name="items-${prefix}-quantity" value="1" min="1" 
+                                   class="quantity-input w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button type="button" class="remove-item-btn text-red-600 hover:text-red-800 text-sm font-medium">
+                                Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return formHtml;
+        }
+        
+        // Add new item
+        if (addBtn) {
+            addBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Create new form
+                const newFormHtml = createEmptyForm();
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = newFormHtml;
+                const newForm = tempDiv.firstElementChild;
+                
+                // Append to container
+                container.appendChild(newForm);
+                
+                // Update total forms count
+                totalFormsInput.value = parseInt(totalFormsInput.value) + 1;
+                
+                // Attach remove handler to the new form's remove button
+                const removeBtn = newForm.querySelector('.remove-item-btn');
+                if (removeBtn) {
+                    removeBtn.addEventListener('click', function() {
+                        const forms = container.querySelectorAll('.item-form');
+                        if (forms.length > 1) {
+                            newForm.remove();
+                            totalFormsInput.value = parseInt(totalFormsInput.value) - 1;
+                        } else {
+                            alert('You need at least one item in the order.');
+                        }
+                    });
+                }
+            });
+        }
+        
+        // Remove item - attach to existing remove buttons
+        document.querySelectorAll('.remove-item-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const form = this.closest('.item-form');
+                const forms = container.querySelectorAll('.item-form');
+                if (forms.length > 1) {
+                    form.remove();
+                    totalFormsInput.value = parseInt(totalFormsInput.value) - 1;
+                } else {
+                    alert('You need at least one item in the order.');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
