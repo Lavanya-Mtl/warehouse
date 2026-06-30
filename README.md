@@ -123,7 +123,7 @@ A full local test run output is checked into the repo: [`test_output.txt`](./tes
 Tests run automatically on every push and pull request via GitHub Actions.
  
 - **Workflow file:** [`.github/workflows/ci.yml`](.github/workflows/ci.yml)
-- **Latest run:** [GitHub Actions](https://github.com/Lavanya_Mtl/warehouse/actions)
+- **Latest run:** [GitHub Actions](https://github.com/Lavanya-Mtl/warehouse/actions)
 
 CI installs dependencies, applies migrations against an in-memory SQLite database, and runs the full pytest suite with coverage — no external database service is needed since both local dev and CI use SQLite.
 
