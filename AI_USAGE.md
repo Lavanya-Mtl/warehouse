@@ -1,8 +1,3 @@
-https://chat.deepseek.com/share/64tm4anvtxls0kibyf
-https://claude.ai/share/3dbcda39-c558-41dd-a1c6-21b47442a867
-
-
-
 # AI-Assisted Development Documentation
 
 ## AI Tools Used
@@ -75,3 +70,16 @@ AI made mistakes in directory structure, paths and did not setup the postgres DB
 I ran the application in my local mac, and tested out each page manually first before running the test suite as well.
 After initial manual testing, I ran automated tests and integrated to Github actions.
 Henceforth, each push would be verified automatically by github actions that runs the test suite. 
+
+
+## Links to transcripts 
+
+1. https://chat.deepseek.com/share/64tm4anvtxls0kibyf
+
+2. https://claude.ai/share/3dbcda39-c558-41dd-a1c6-21b47442a867
+
+### PDF format 
+
+[Claude Transcript](./Django%20shipping%20box%20recommendation%20system%20-%20Claude.pdf)
+
+[DeepSeek Transcript](./Django%20Project%20Setup%20-%20Transcript%201.pdf)
