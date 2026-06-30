@@ -57,7 +57,8 @@ jobs:
 
       - name: Load fixtures
         run: |
-          python manage.py loaddata boxes/fixtures/boxes.json
+          python manage.py loaddata boxes/fixtures/boxes/boxes.json
+          python manage.py loaddata products/fixtures/products/products.json
 
       - name: Run tests with coverage
         run: |
